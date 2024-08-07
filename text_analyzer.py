@@ -40,14 +40,16 @@ def load_from_file(filename):
         with open(filename, 'r', encoding='utf-8') as file:
             content = file.read()
             print(f'\n{content}\n')
+            return TextAnalyzer(content)
     except FileNotFoundError:
          print('File doesn`t exist')
+         return None
 
-def save_to_file(analyzer, filename):
+def save_to_file(analyzer, filename='text_analyzer.txt'):
         with open(filename, 'w', encoding='utf-8') as file:
             file.write(analyzer.text)
 
-def save_statistics_to_file(analyzer, filename):
+def save_statistics_to_file(analyzer, filename='text_analyzer_statistics.txt'):
         word_count = analyzer.count_words()
         total_characters, characters_without_spaces = analyzer.count_characters()
         common_words = analyzer.most_common_words()
@@ -97,24 +99,39 @@ while True:
     print('6. Delete all files')
     print('7. Exit')
 
-    user_choose = int(input('\nChoose 1 - 5:\n'))
+    try:
+        user_choose = int(input('\nChoose 1 - 7:\n'))
+    except ValueError:
+        print("Invalid input. Please enter a number between 1 and 7.\n")
+        continue
+
 
     if user_choose == 1:
         text_to_analyze = get_text_input()
         analyzer = TextAnalyzer(text_to_analyze)
     elif user_choose == 2:
-        load_from_file('text_analyzer.txt')
+        analyzer = load_from_file('text_analyzer.txt')
+        if analyzer is None:
+            print('Loading failed.\n')
     elif user_choose == 3:
         display_statistics(analyzer)
     elif user_choose == 4:
-        save_to_file(analyzer, 'text_analyzer.txt')
+        if analyzer:
+            save_to_file(analyzer, 'text_analyzer.txt')
+        else:
+            print('Nothing to save.')
     elif user_choose == 5:
-        save_statistics_to_file(analyzer, 'text_analyzer_statistics.txt')
+        if analyzer:
+            save_statistics_to_file(analyzer, 'text_analyzer_statistics.txt')
+        else:
+            print('Nothing to save.')
     elif user_choose == 6:
         delete_all_files()
     elif user_choose == 7:
         print('\nGoodbye!\n')
         break
+    else:
+        print('Wrong. Do it again.')
 
 
 

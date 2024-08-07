@@ -1,3 +1,4 @@
+import os
 
 class TextAnalyzer:
     def __init__(self, text):
@@ -31,14 +32,16 @@ class TextAnalyzer:
 
 
 def get_text_input():
-    # get_input_from_user = input('\nProvide the text to analyze: \n')
-    get_input_from_user = 'Świetnie Świetnie Świetnie Świetnie Świetnie, projekt Analizator Tekstu to doskonały wybór. Pozwoli Ci rozwijać umiejętności pracy z tekstem, obsługą plików oraz wykorzystaniem klas i obiektów.'
+    get_input_from_user = input('\nProvide the text to analyze: \n')
     return get_input_from_user
 
 def load_from_file(filename):
+    try:
         with open(filename, 'r', encoding='utf-8') as file:
             content = file.read()
             print(f'\n{content}\n')
+    except FileNotFoundError:
+         print('File doesn`t exist')
 
 def save_to_file(analyzer, filename):
         with open(filename, 'w', encoding='utf-8') as file:
@@ -71,13 +74,28 @@ def display_statistics(analyzer):
             print(f'{word} : {count}')
         print('\n')
 
+def delete_file(filename):
+    try:
+        os.remove(filename)
+        print(f'{filename} deleted.')
+    except FileNotFoundError:
+        print(f'{filename} doesn`t exist.')
+
+
+
+def delete_all_files():
+    files = ['text_analyzer.txt', 'text_analyzer_statistics.txt']
+    for file in files:
+        delete_file(file)
+
 while True:
     print('1. Input  the text')
     print('2. Load the text from file')
     print('3. Show statistics')
     print('4. Save the text to file')
     print('5. Save the statistics to file')
-    print('6. Exit')
+    print('6. Delete all files')
+    print('7. Exit')
 
     user_choose = int(input('\nChoose 1 - 5:\n'))
 
@@ -93,6 +111,8 @@ while True:
     elif user_choose == 5:
         save_statistics_to_file(analyzer, 'text_analyzer_statistics.txt')
     elif user_choose == 6:
+        delete_all_files()
+    elif user_choose == 7:
         print('\nGoodbye!\n')
         break
 
